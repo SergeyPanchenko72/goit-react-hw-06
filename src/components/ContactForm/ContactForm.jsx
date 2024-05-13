@@ -1,32 +1,18 @@
 import css from "./ContactForm.module.css";
 import { nanoid } from "nanoid";
-// import { useId } from "react";
 import { Formik, Form, Field } from "formik";
 import { ErrorMessage } from "formik";
 import { useDispatch } from "react-redux";
 import { addContact } from "../../redux/contactsSlice";
-import * as Yup from "yup";
 
-export default function ContactForm() {
+export default function ContactForm({ initialValues, FeedbackSchema }) {
   const dispatch = useDispatch();
   const handleSubmit = (values, actions) => {
     dispatch(addContact(values));
 
     actions.resetForm();
   };
-  const FeedbackSchema = Yup.object().shape({
-    name: Yup.string()
-      .min(3, "Too Short!")
-      .max(50, "Too Long!")
-      .required("Required"),
-    number: Yup.string()
-      .matches(/^\d{3}-\d{2}-\d{2}$/, "Invalid phone number format")
-      .required("Required"),
-  });
-  const initialValues = {
-    name: "",
-    number: "",
-  };
+
   const nameId = nanoid();
   const numberId = nanoid();
 
