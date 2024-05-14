@@ -4,9 +4,25 @@ import { Formik, Form, Field } from "formik";
 import { ErrorMessage } from "formik";
 import { useDispatch } from "react-redux";
 import { addContact } from "../../redux/contactsSlice";
+import * as Yup from "yup";
 
-export default function ContactForm({ initialValues, FeedbackSchema }) {
+export default function ContactForm() {
   const dispatch = useDispatch();
+  const initialValues = {
+    name: "",
+    number: "",
+  };
+
+  const FeedbackSchema = Yup.object().shape({
+    name: Yup.string()
+      .min(3, "Too Short!")
+      .max(50, "Too Long!")
+      .required("Required"),
+    number: Yup.string()
+      .matches(/^\d{3}-\d{2}-\d{2}$/, "Invalid phone number format")
+      .required("Required"),
+  });
+
   const handleSubmit = (values, actions) => {
     dispatch(addContact(values));
 
